@@ -13,6 +13,8 @@
     "lint:style:fix": "stylelint --fix 'src/**/*.{css,scss,vue}'"
   },
   "dependencies": {
+    "postcss-html": "^1.5.0",
+    "sass": "^1.54.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {
