@@ -1,1 +1,3 @@
-<template>App</template>
+<template>
+  <router-view />
+</template>

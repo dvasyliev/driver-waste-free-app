@@ -1,0 +1,1 @@
+<template>Welcome page</template>
