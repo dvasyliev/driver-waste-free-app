@@ -4,7 +4,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'welcome',
-    component: import(/* webpackChunkName: "welcome" */ '@/pages/Welcome.vue'),
+    redirect: { name: 'route-wizard', params: { routeId: 1 } },
+  },
+
+  {
+    path: '/route-wizard/:routeId',
+    name: 'route-wizard',
+    component: import(/* webpackChunkName: "route-wizard" */ '@/pages/RouteWizard.vue'),
   },
 
   {
