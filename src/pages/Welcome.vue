@@ -1,1 +1,4 @@
-<template>Welcome page</template>
+<template>
+  Welcome
+  <ElButton>Button</ElButton>
+</template>
