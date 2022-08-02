@@ -8,7 +8,9 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint:script": "eslint 'src/**/*.{ts,vue,json}'",
-    "lint:script:fix": "eslint --fix 'src/**/*.{ts,vue,json}'"
+    "lint:script:fix": "eslint --fix 'src/**/*.{ts,vue,json}'",
+    "lint:style": "stylelint 'src/**/*.{css,scss,vue}'",
+    "lint:style:fix": "stylelint --fix 'src/**/*.{css,scss,vue}'"
   },
   "dependencies": {
     "vue": "^3.2.37"
@@ -25,6 +27,10 @@
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
+    "stylelint": "^14.9.1",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recommended-vue": "^1.4.0",
+    "stylelint-config-standard": "^26.0.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0",
     "vue-tsc": "^0.38.4"
@@ -35,7 +41,8 @@
     }
   },
   "lint-staged": {
-    "*.{ts,vue,json}": "eslint --fix 'src/**/*.{ts,vue,json}'",
-    "*": "prettier -w -u"
+    "src/**/*.{ts,vue,json}": "eslint --fix",
+    "src/**/*.{css,scss,vue}": "stylelint --fix",
+    "src/**/*": "prettier -w -u"
   }
 }
