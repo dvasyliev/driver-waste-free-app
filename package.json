@@ -6,13 +6,20 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint:script": "eslint 'src/**/*.{ts,vue,json}'",
+    "lint:script:fix": "eslint --fix 'src/**/*.{ts,vue,json}'"
   },
   "dependencies": {
     "vue": "^3.2.37"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
     "@vitejs/plugin-vue": "^3.0.0",
+    "@vue/eslint-config-typescript": "^11.0.0",
+    "eslint": "^8.21.0",
+    "eslint-plugin-vue": "^9.3.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0",
     "vue-tsc": "^0.38.4"
