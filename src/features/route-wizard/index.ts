@@ -1,2 +1,3 @@
 export { default as RouteWizard } from './components/RouteWizard.vue'
-export * from './routeWizardService'
+export { default as RouteWizardProgressBar } from './components/RouteWizardProgressBar.vue'
+export * from './routeWizardStore'

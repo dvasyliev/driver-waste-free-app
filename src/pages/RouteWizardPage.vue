@@ -2,21 +2,23 @@
   <div class="RouteWizardPage">
     <div class="RouteWizardPage-topBar">ROUTE-NAME-1</div>
     <div class="RouteWizardPage-progressBar">
-      <el-progress :percentage="50" color="#37ccbe" style="width: 100%" />
+      <RouteWizardProgressBar />
     </div>
     <div class="RouteWizardPage-main">
-      <RouteWizard :route="data" />
+      <RouteWizard />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { getRoute } from '@/features/route-wizard'
-import { RouteWizard } from '@/features/route-wizard'
+import { useRoute } from 'vue-router'
+import { useRouteWizardStore, RouteWizard, RouteWizardProgressBar } from '@/features/route-wizard'
 
-const { data } = await getRoute()
+const route = useRoute()
+const { routeId } = route.params
+const routeWizardStore = useRouteWizardStore()
 
-// const { route, isLoading, isReady, error, getRoute } = useRouteState()
+await routeWizardStore.getRoute(Number(routeId))
 </script>
 
 <style lang="scss" scoped>

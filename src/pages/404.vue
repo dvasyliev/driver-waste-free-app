@@ -1,1 +1,1 @@
-<template>Page "{{ $route.href }}"" not found!</template>
+<template>Page "{{ $route.path }}"" not found!</template>

@@ -42,7 +42,7 @@
     },
     {
       "stop_id": 2,
-      "status": 2,
+      "status": 3,
       "name": "De Other Koffie Place",
       "comment": "Emmers omwisselen. ",
       "avatar": null,
@@ -170,6 +170,7 @@
       ]
     }
   ],
+  "route_id": 1,
   "name": "WED-MIX-1",
   "orglog_id": "601bfbef6af612b189747282",
   "vehicle_id": "6037ef261da175c57c72ab89",

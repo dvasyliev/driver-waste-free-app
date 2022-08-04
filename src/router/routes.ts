@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
 
-const routes: RouteRecordRaw[] = [
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'welcome',
@@ -10,13 +10,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/route-wizard/:routeId',
     name: 'route-wizard',
-    component: import(/* webpackChunkName: "route-wizard" */ '@/pages/RouteWizard.vue'),
+    component: import(/* webpackChunkName: "route-wizard-page" */ '@/pages/RouteWizardPage.vue'),
   },
 
   {
     path: '/:pathMatch(.*)*',
-    component: import(/* webpackChunkName: "404" */ '@/pages/404.vue'),
+    component: import(/* webpackChunkName: "404-page" */ '@/pages/404.vue'),
   },
 ]
-
-export default routes

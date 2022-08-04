@@ -4,15 +4,6 @@ type Dropoff = boolean
 type OrderType = number
 type Status = number
 type Telephone = string | null
-
-// type Status = 'new' | 'pending' | 'scheduled' | 'in_progress' | 'completed'
-// type OrderType = 'pickup' | 'dropoff'
-// type IssueType =
-//   | 'other'
-//   | 'wrong_quantity_ordered'
-//   | 'wrong_container_type'
-//   | 'container_not_accessible'
-
 type TimeData = {
   eta?: string
   time_end: string
@@ -98,6 +89,7 @@ export type Route = {
   orglog_id: Orgloc['orgloc_id']
   status: Status
   stops: Stop[]
+  route_id: number
   vehicle_id: Vehicle['vehicle_id']
   _created: string
   _modified: string

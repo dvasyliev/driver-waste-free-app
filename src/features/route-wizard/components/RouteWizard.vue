@@ -1,15 +1,26 @@
 <template>
-  <RouteStopCard :stop="data.stops[0]">
-    <template #controls>
-      <button>Itinerary</button>
-      <button>Proceed</button>
-    </template>
-  </RouteStopCard>
+  <template v-if="currentStop">
+    <RouteStopCard :stop="currentStop">
+      <template #controls>
+        <button>Itinerary</button>
+        <button @click="onProceed">Proceed</button>
+      </template>
+    </RouteStopCard>
+    <RouteSummary />
+  </template>
 </template>
 
 <script lang="ts" setup>
-import { getRoute } from '@/features/route-wizard'
-import RouteStopCard from '@/features/route-wizard/components/RouteStopCard.vue'
+import { storeToRefs } from 'pinia'
+import { useRouteWizardStore } from '../routeWizardStore'
+import RouteStopCard from './RouteStopCard.vue'
+import RouteSummary from './RouteSummary.vue'
 
-const { data } = await getRoute()
+const routeWizardStore = useRouteWizardStore()
+const { currentStop } = storeToRefs(routeWizardStore)
+
+async function onProceed() {
+  await routeWizardStore.completeCurrentStop()
+  await routeWizardStore.getRoute()
+}
 </script>
