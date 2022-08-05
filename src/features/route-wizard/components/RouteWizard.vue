@@ -1,11 +1,8 @@
 <template>
-  <template v-if="currentStop">
-    <RouteStopCard :stop="currentStop">
-      <template #controls>
-        <button>Itinerary</button>
-        <button @click="onProceed">Proceed</button>
-      </template>
-    </RouteStopCard>
+  <template v-if="isRouteCompleted"> Route completed! </template>
+
+  <template v-else-if="currentStop">
+    <RouteStopCard :stop="currentStop" @itinerary="onItinerary" @proceed="onProceed" />
     <RouteSummary />
   </template>
 </template>
@@ -17,10 +14,16 @@ import RouteStopCard from './RouteStopCard.vue'
 import RouteSummary from './RouteSummary.vue'
 
 const routeWizardStore = useRouteWizardStore()
-const { currentStop } = storeToRefs(routeWizardStore)
+const { route, currentStop, isRouteCompleted } = storeToRefs(routeWizardStore)
+
+function onItinerary(query: string) {
+  window.open(`http://maps.google.com/?q=${query}`, '_blank')
+}
 
 async function onProceed() {
-  await routeWizardStore.completeCurrentStop()
-  await routeWizardStore.getRoute()
+  if (route.value) {
+    await routeWizardStore.completeCurrentStop()
+    await routeWizardStore.getRoute(route.value.route_id)
+  }
 }
 </script>

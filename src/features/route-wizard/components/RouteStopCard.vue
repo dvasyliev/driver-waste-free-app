@@ -34,23 +34,33 @@
               <div class="RouteStopCard-ordersItemIcon">
                 <span class="material-icons">{{ order.type === 0 ? 'unarchive' : 'archive' }}</span>
               </div>
-              {{ order.quantity }} x {{ order.size }} {{ order.stream_product_id }}
+              {{ order.quantity }} x {{ order.size }} {{ order.stream_product_name }}
             </div>
           </template>
         </div>
       </div>
 
-      <template v-if="$slots['controls']">
-        <div class="RouteStopCard-controls">
-          <slot name="controls" />
-        </div>
-      </template>
+      <div class="RouteStopCard-buttons">
+        <ElButton
+          class="RouteStopCard-button"
+          color="#37ccbe"
+          @click="emit('itinerary', addressQuery)"
+        >
+          Itinerary
+          <span class="material-icons">directions</span>
+        </ElButton>
+
+        <ElButton class="RouteStopCard-button" color="#37ccbe" @click="emit('proceed')">
+          Proceed
+          <span class="material-icons">done</span>
+        </ElButton>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { computed, toRefs } from 'vue'
 import { useDateFormat } from '@vueuse/core'
 import { Stop } from '../types'
 
@@ -58,11 +68,22 @@ type Props = {
   stop: Stop
 }
 
-const props = defineProps<Props>()
-const { stop } = toRefs(props)
+type Emit = {
+  (event: 'itinerary', query: string): void
+  (event: 'proceed'): void
+}
 
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
+
+const { stop } = toRefs(props)
 const timeStart = useDateFormat(stop.value.time_start, 'HH:mm')
 const timeEnd = useDateFormat(stop.value.time_end, 'HH:mm')
+const addressQuery = computed(() => {
+  const { house_number, street, town, country, postal_code } = stop.value.address
+
+  return `${house_number} ${street}, ${town}, ${country}, ${postal_code}`
+})
 </script>
 
 <style lang="scss" scoped>
@@ -200,8 +221,31 @@ const timeEnd = useDateFormat(stop.value.time_end, 'HH:mm')
     }
   }
 
-  &-controls {
-    margin-top: 18px;
+  &-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 12px -6px -6px;
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    margin: 6px;
+    padding: 0 36px;
+    border-radius: 8px;
+    box-shadow: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+
+    span {
+      display: block;
+      margin-left: 12px;
+      font-size: 36px;
+    }
   }
 }
 </style>

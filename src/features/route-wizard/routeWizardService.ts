@@ -30,6 +30,8 @@ export const updateRoute = (
     setTimeout(() => {
       if (storage.route.route_id === id) {
         storage.route = { ...storage.route, ...data }
+
+        return resolve({ data: cloneDeep(storage.route) })
       }
 
       reject({ error: { message: `Route ${id} not found` } })

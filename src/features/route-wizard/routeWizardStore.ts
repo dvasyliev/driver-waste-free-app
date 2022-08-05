@@ -34,9 +34,6 @@ export const useRouteWizardStore = defineStore('routeWizard', {
 
       return index >= 0 ? index + 1 : NaN
     },
-    isLastStop(): boolean {
-      return this.currentStopNumber === this.numberOfStops
-    },
     isRouteCompleted(): boolean {
       return this.route?.status === Status.Completed
     },
@@ -59,15 +56,13 @@ export const useRouteWizardStore = defineStore('routeWizard', {
     },
 
     async completeCurrentStop() {
-      if (this.currentStop?.stop_id) {
-        await updateStop(this.currentStop?.stop_id, { status: Status.Completed })
+      if (this.currentStop) {
+        await updateStop(this.currentStop.stop_id, { status: Status.Completed })
       }
 
-      if (this.nextStop?.stop_id) {
-        await updateStop(this.nextStop?.stop_id, { status: Status.InProgress })
-      }
-
-      if (this.isLastStop && this.route) {
+      if (this.nextStop) {
+        await updateStop(this.nextStop.stop_id, { status: Status.InProgress })
+      } else if (this.route) {
         await updateRoute(this.route.route_id, { status: Status.Completed })
       }
     },

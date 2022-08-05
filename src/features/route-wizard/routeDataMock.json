@@ -23,6 +23,7 @@
         {
           "order_id": "000000007",
           "stream_product_id": 6,
+          "stream_product_name": "Orange Peels",
           "stream_type": "sinaasappelschillen",
           "quantity": 1,
           "size": 20,
@@ -32,6 +33,7 @@
         {
           "order_id": "000000006",
           "stream_product_id": 7,
+          "stream_product_name": "Coffee",
           "stream_type": "koffiedrab",
           "quantity": 1,
           "size": 20,
@@ -63,6 +65,7 @@
         {
           "order_id": "000000004",
           "stream_product_id": 7,
+          "stream_product_name": "Coffee",
           "stream_type": "koffiedrab",
           "quantity": 1,
           "size": 20,
@@ -72,6 +75,7 @@
         {
           "order_id": "000000005",
           "stream_product_id": 6,
+          "stream_product_name": "Orange Peels",
           "stream_type": "sinaasappelschillen",
           "quantity": 1,
           "size": 20,
@@ -103,6 +107,7 @@
         {
           "order_id": "000000003",
           "stream_product_id": 6,
+          "stream_product_name": "Orange Peels",
           "stream_type": "sinaasappelschillen",
           "quantity": 1,
           "size": 20,
@@ -112,6 +117,7 @@
         {
           "order_id": "000000004",
           "stream_product_id": 6,
+          "stream_product_name": "Orange Peels",
           "stream_type": "sinaasappelschillen",
           "quantity": 2,
           "size": 20,
@@ -121,6 +127,7 @@
         {
           "order_id": "000000002",
           "stream_product_id": 7,
+          "stream_product_name": "Coffee",
           "stream_type": "koffiedrab",
           "quantity": 1,
           "size": 20,
@@ -152,6 +159,7 @@
         {
           "order_id": "000000001",
           "stream_product_id": 7,
+          "stream_product_name": "Coffee",
           "stream_type": "koffiedrab",
           "quantity": 5,
           "size": 20,
@@ -161,6 +169,7 @@
         {
           "order_id": "000000002",
           "stream_product_id": 7,
+          "stream_product_name": "Coffee",
           "stream_type": "koffiedrab",
           "quantity": 4,
           "size": 20,

@@ -38,6 +38,7 @@ export type Order = {
   size: number
   status: Status
   stream_product_id: number
+  stream_product_name: string
   stream_type: string
   type: OrderType
 }
