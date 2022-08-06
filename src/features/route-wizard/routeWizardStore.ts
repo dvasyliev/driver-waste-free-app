@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
-import { Route, Stop } from './types'
+import { Order, Route, Stop } from './types'
 import { Status } from './enums'
-import { getRoute, updateStop, updateRoute } from './routeWizardService'
+import { getRoute, updateStop, updateRoute, updateOrder } from './routeWizardService'
 
 type State = {
   route: Route | null
@@ -64,6 +64,12 @@ export const useRouteWizardStore = defineStore('routeWizard', {
         await updateStop(this.nextStop.stop_id, { status: Status.InProgress })
       } else if (this.route) {
         await updateRoute(this.route.route_id, { status: Status.Completed })
+      }
+    },
+
+    async updateOrderQuantity(orderId: Order['order_id'], quantity: Order['quantity']) {
+      if (this.currentStop) {
+        await updateOrder(this.currentStop?.stop_id, orderId, { quantity })
       }
     },
   },

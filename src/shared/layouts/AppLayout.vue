@@ -3,6 +3,8 @@
     <div class="AppLayout-main">
       <slot />
     </div>
+
+    <div id="modal" class="AppLayout-modals" />
   </div>
 </template>
 

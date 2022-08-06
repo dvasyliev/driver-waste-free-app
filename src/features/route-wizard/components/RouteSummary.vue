@@ -26,8 +26,9 @@ import { computed } from 'vue'
 import { useRouteWizardStore } from '../routeWizardStore'
 
 const routeWizardStore = useRouteWizardStore()
-const { numberOfStops, nextStop, currentStopNumber, isLastStop } = storeToRefs(routeWizardStore)
+const { numberOfStops, nextStop, currentStopNumber } = storeToRefs(routeWizardStore)
 
 const isLastButNotOneStop = computed(() => currentStopNumber.value === numberOfStops.value - 1)
+const isLastStop = computed(() => currentStopNumber.value === numberOfStops.value)
 const numberOfLeftStops = computed(() => numberOfStops.value - currentStopNumber.value)
 </script>
