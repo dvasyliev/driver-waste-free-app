@@ -1,47 +1,100 @@
 <template>
-  <ElDialog v-model="isActive" :show-close="false" custom-class="OrdersModal" fullscreen>
-    <template #header="{ close, titleId, titleClass }">
+  <ElDialog
+    ref="dialog"
+    :model-value="isActive"
+    :show-close="false"
+    :append-to-body="true"
+    custom-class="OrdersModal"
+    fullscreen
+  >
+    <template #header="{ titleId, titleClass }">
       <div class="OrdersModal-left">
-        <ElButton class="OrdersModal-back" circle @click="onClose(close)">
+        <ElButton class="OrdersModal-back" circle @click="onClose">
           <span class="material-icons">arrow_back</span>
         </ElButton>
       </div>
 
       <div class="OrdersModal-center">
-        <div :id="titleId" :class="titleClass">
-          Review orders<br />
-          2/2
+        <div :id="titleId" :class="titleClass" class="OrdersModal-title">
+          Reviewed orders<br />
+          {{ numberOfReviewedOrders }}/{{ currentStopOrders.length }}
         </div>
       </div>
 
-      <div class="OrdersModal-right">Stop #1</div>
+      <div class="OrdersModal-right">
+        <div class="OrdersModal-stopNumber">Stop #{{ currentStop?.stop_id }}</div>
+      </div>
     </template>
 
-    <OrderCard v-for="order in orders" :key="order.order_id" :order="order" />
+    <template v-for="order in currentStopOrders" :key="order.order_id">
+      <OrderCard :order="order" />
+    </template>
+
+    <template v-if="!isAllOrdersReviewed">
+      <ElAlert
+        title="Review all orders before go further!"
+        type="info"
+        show-icon
+        :closable="false"
+        style="margin-bottom: 12px"
+      />
+    </template>
+
+    <div class="OrdersModal-buttons">
+      <ElButton
+        class="OrdersModal-button"
+        :disabled="!isAllOrdersReviewed"
+        color="#34cdbf"
+        @click="onComplete"
+      >
+        {{ nextStop ? 'Next stop' : 'Complete stop' }}
+      </ElButton>
+    </div>
   </ElDialog>
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
-import { Order } from '../types'
+import { computed, ref, toRefs } from 'vue'
+import { storeToRefs } from 'pinia'
+import { Status } from '../enums'
+import { useRouteWizardStore } from '../routeWizardStore'
 import OrderCard from './OrderCard.vue'
 
 type Props = {
-  orders: Order[]
   isActive: boolean
 }
+const props = defineProps<Props>()
+const { isActive } = toRefs(props)
 
 type Emit = {
   (event: 'update:isActive', isActive: boolean): void
 }
-
-const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
-const { isActive, orders } = toRefs(props)
 
-function onClose(close: () => void) {
-  close()
+const routeWizardStore = useRouteWizardStore()
+const { currentStop, currentStopOrders, nextStop } = storeToRefs(routeWizardStore)
+
+const dialog = ref(null)
+const numberOfReviewedOrders = computed(() => {
+  return currentStopOrders.value.filter(({ status }) =>
+    [Status.Completed, Status.Issue].includes(status),
+  ).length
+})
+const isAllOrdersReviewed = computed(
+  () => numberOfReviewedOrders.value === currentStopOrders.value.length,
+)
+
+function onClose() {
   emit('update:isActive', !isActive.value)
+  // close()
+}
+
+async function onComplete() {
+  if (isAllOrdersReviewed.value) {
+    await routeWizardStore.completeCurrentStop()
+    emit('update:isActive', !isActive.value)
+    await routeWizardStore.updateCurrentRoute()
+  }
 }
 </script>
 
@@ -54,6 +107,26 @@ function onClose(close: () => void) {
     span {
       font-size: 16px;
     }
+  }
+
+  &-title,
+  &-stopNumber {
+    color: #ffffff;
+    text-align: center;
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    margin: 0 auto;
+    padding: 0 36px;
+    border-radius: 8px;
+    box-shadow: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
   }
 
   .el-dialog {

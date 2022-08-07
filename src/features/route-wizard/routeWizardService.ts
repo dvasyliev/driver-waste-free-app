@@ -54,7 +54,7 @@ export const updateStop = (
   })
 
   return new Promise((resolve) => {
-    setTimeout(() => resolve({ data: newStop }), 200)
+    setTimeout(() => resolve({ data: cloneDeep(newStop) }), 200)
   })
 }
 
@@ -74,6 +74,6 @@ export const updateOrder = (
   })
 
   return new Promise((resolve) => {
-    setTimeout(() => resolve({ data: newOrder }), 200)
+    setTimeout(() => resolve({ data: cloneDeep(newOrder) }), 200)
   })
 }

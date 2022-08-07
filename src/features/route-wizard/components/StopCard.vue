@@ -1,37 +1,37 @@
 <template>
-  <div class="RouteStopCard">
-    <div class="RouteStopCard-header">
-      <div class="RouteStopCard-name">
+  <div class="StopCard">
+    <div class="StopCard-header">
+      <div class="StopCard-name">
         {{ stop.name }}
       </div>
 
-      <div class="RouteStopCard-address">
-        <div class="RouteStopCard-addressIcon">
+      <div class="StopCard-address">
+        <div class="StopCard-addressIcon">
           <span class="material-icons-outlined">location_on</span>
         </div>
         {{ stop.address.street }} {{ stop.address.house_number }}<br />
         {{ stop.address.postal_code }} {{ stop.address.country }} {{ stop.address.town }}
       </div>
 
-      <div class="RouteStopCard-time">
-        <div class="RouteStopCard-timeIcon">
+      <div class="StopCard-time">
+        <div class="StopCard-timeIcon">
           <span class="material-icons-outlined">schedule</span>
         </div>
         {{ timeStart }} - {{ timeEnd }}
       </div>
     </div>
 
-    <div class="RouteStopCard-body">
-      <div class="RouteStopCard-orders">
-        <div class="RouteStopCard-ordersTitle">
+    <div class="StopCard-body">
+      <div class="StopCard-orders">
+        <div class="StopCard-ordersTitle">
           <span>Orders</span>
           <span>{{ stop.orders.length }}</span>
         </div>
 
-        <div class="RouteStopCard-ordersItems">
+        <div class="StopCard-ordersItems">
           <template v-for="order in stop.orders" :key="order.order_id">
-            <div class="RouteStopCard-ordersItem">
-              <div class="RouteStopCard-ordersItemIcon">
+            <div class="StopCard-ordersItem">
+              <div class="StopCard-ordersItemIcon">
                 <span class="material-icons">{{ order.type === 0 ? 'unarchive' : 'archive' }}</span>
               </div>
               {{ order.quantity }} x {{ order.size }} {{ order.stream_product_name }}
@@ -40,17 +40,13 @@
         </div>
       </div>
 
-      <div class="RouteStopCard-buttons">
-        <ElButton
-          class="RouteStopCard-button"
-          color="#37ccbe"
-          @click="emit('itinerary', addressQuery)"
-        >
+      <div class="StopCard-buttons">
+        <ElButton class="StopCard-button" color="#37ccbe" @click="onItinerary">
           Itinerary
           <span class="material-icons">directions</span>
         </ElButton>
 
-        <ElButton class="RouteStopCard-button" color="#37ccbe" @click="emit('proceed')">
+        <ElButton class="StopCard-button" color="#37ccbe" @click="emit('proceed')">
           Proceed
           <span class="material-icons">done</span>
         </ElButton>
@@ -67,16 +63,14 @@ import { Stop } from '../types'
 type Props = {
   stop: Stop
 }
+const props = defineProps<Props>()
+const { stop } = toRefs(props)
 
 type Emit = {
-  (event: 'itinerary', query: string): void
   (event: 'proceed'): void
 }
-
-const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
 
-const { stop } = toRefs(props)
 const timeStart = useDateFormat(stop.value.time_start, 'HH:mm')
 const timeEnd = useDateFormat(stop.value.time_end, 'HH:mm')
 const addressQuery = computed(() => {
@@ -84,10 +78,14 @@ const addressQuery = computed(() => {
 
   return `${house_number} ${street}, ${town}, ${country}, ${postal_code}`
 })
+
+function onItinerary() {
+  window.open(`http://maps.google.com/?q=${addressQuery.value}`, '_blank')
+}
 </script>
 
 <style lang="scss" scoped>
-.RouteStopCard {
+.StopCard {
   &-header,
   &-body {
     padding: 18px;

@@ -17,7 +17,8 @@ export const useRouteWizardStore = defineStore('routeWizard', {
   state: () => initialState,
 
   getters: {
-    stops({ route }) {
+    // Stops
+    stops({ route }): Stop[] {
       return route?.stops || []
     },
     numberOfStops(): number {
@@ -34,10 +35,17 @@ export const useRouteWizardStore = defineStore('routeWizard', {
 
       return index >= 0 ? index + 1 : NaN
     },
+
+    // Orders
+    currentStopOrders(): Order[] {
+      return this.currentStop?.orders || []
+    },
+
+    // Route
     isRouteCompleted(): boolean {
       return this.route?.status === Status.Completed
     },
-    currentProgress(): number {
+    routeProgress(): number {
       return this.isRouteCompleted
         ? 100
         : (((this.currentStopNumber - 1) / this.numberOfStops) * 100) | 0
@@ -55,13 +63,23 @@ export const useRouteWizardStore = defineStore('routeWizard', {
       }
     },
 
+    async updateCurrentRoute() {
+      if (this.route) {
+        await this.getRoute(this.route?.route_id)
+      }
+    },
+
     async completeCurrentStop() {
+      // Complete current stop
       if (this.currentStop) {
         await updateStop(this.currentStop.stop_id, { status: Status.Completed })
       }
 
+      // Start next stop
       if (this.nextStop) {
         await updateStop(this.nextStop.stop_id, { status: Status.InProgress })
+
+        // Complete current route
       } else if (this.route) {
         await updateRoute(this.route.route_id, { status: Status.Completed })
       }
@@ -70,6 +88,18 @@ export const useRouteWizardStore = defineStore('routeWizard', {
     async updateOrderQuantity(orderId: Order['order_id'], quantity: Order['quantity']) {
       if (this.currentStop) {
         await updateOrder(this.currentStop?.stop_id, orderId, { quantity })
+      }
+    },
+
+    async completeOrder(orderId: Order['order_id']) {
+      if (this.currentStop) {
+        await updateOrder(this.currentStop?.stop_id, orderId, { status: Status.Completed })
+      }
+    },
+
+    async issueOrder(orderId: Order['order_id']) {
+      if (this.currentStop) {
+        await updateOrder(this.currentStop?.stop_id, orderId, { status: Status.Issue })
       }
     },
   },

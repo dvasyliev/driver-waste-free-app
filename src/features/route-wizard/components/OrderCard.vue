@@ -11,16 +11,28 @@
       <div class="OrderCard-quantity">
         <div class="OrderCard-quantityText">Adjust quantity (if needed)</div>
         <div class="OrderCard-quantityControls">
-          <ElButton class="OrderCard-quantityControl" color="#34cdbf" circle @click="onDecrease">
-            <span class="material-icons">add</span>
+          <ElButton
+            class="OrderCard-quantityControl"
+            :disabled="order.quantity === MIN_ORDER_QUANTITY"
+            color="#34cdbf"
+            circle
+            @click="onDecrease"
+          >
+            <span class="material-icons">remove</span>
           </ElButton>
 
           <div class="OrderCard-quantityAmount">
             {{ order.quantity }}
           </div>
 
-          <ElButton class="OrderCard-quantityControl" color="#34cdbf" circle @click="onIncrease">
-            <span class="material-icons">remove</span>
+          <ElButton
+            class="OrderCard-quantityControl"
+            :disabled="order.quantity === MAX_ORDER_QUANTITY"
+            color="#34cdbf"
+            circle
+            @click="onIncrease"
+          >
+            <span class="material-icons">add</span>
           </ElButton>
         </div>
       </div>
@@ -29,11 +41,25 @@
     <div class="OrderCard-right">
       <div class="OrderCard-type">{{ order.type === 0 ? 'Pickup' : 'Placement' }}</div>
       <div class="OrderCard-actions">
-        <ElButton class="OrderCard-action" color="#ffc057" circle @click="onWarning">
+        <ElButton
+          class="OrderCard-action --issue"
+          :disabled="action === ActionTypes.Issue"
+          :plain="action !== ActionTypes.Issue"
+          color="#ffc057"
+          circle
+          @click="onIssue"
+        >
           <span class="material-icons">warning</span>
         </ElButton>
 
-        <ElButton class="OrderCard-action" color="#34cdbf" circle @click="onDone">
+        <ElButton
+          class="OrderCard-action --completed"
+          :disabled="action === ActionTypes.Completed"
+          :plain="action !== ActionTypes.Completed"
+          color="#34cdbf"
+          circle
+          @click="onComplete"
+        >
           <span class="material-icons">done</span>
         </ElButton>
       </div>
@@ -42,7 +68,9 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
+import { computed, toRefs } from 'vue'
+import { Status } from '../enums'
+import { useRouteWizardStore } from '../routeWizardStore'
 import { Order } from '../types'
 
 const MIN_ORDER_QUANTITY = 0
@@ -51,36 +79,52 @@ const MAX_ORDER_QUANTITY = 100
 type Props = {
   order: Order
 }
-
-type Emit = {
-  (event: 'decrease', quantity: number): void
-  (event: 'increase', quantity: number): void
-  (event: 'warning'): void
-  (event: 'done'): void
-}
-
 const props = defineProps<Props>()
-const emit = defineEmits<Emit>()
 const { order } = toRefs(props)
 
-function onDecrease() {
+const routeWizardStore = useRouteWizardStore()
+
+enum ActionTypes {
+  Issue = 'issue',
+  Completed = 'completed',
+}
+const action = computed({
+  get: () => {
+    if (order.value.status === Status.Issue) return ActionTypes.Issue
+    if (order.value.status === Status.Completed) return ActionTypes.Completed
+    return null
+  },
+  set: (value) => value,
+})
+
+async function onDecrease() {
   if (order.value.quantity > MIN_ORDER_QUANTITY) {
-    emit('decrease', order.value.quantity - 1)
+    await routeWizardStore.updateOrderQuantity(order.value.order_id, order.value.quantity - 1)
+    await routeWizardStore.updateCurrentRoute()
   }
 }
 
-function onIncrease() {
+async function onIncrease() {
   if (order.value.quantity < MAX_ORDER_QUANTITY) {
-    emit('increase', order.value.quantity + 1)
+    await routeWizardStore.updateOrderQuantity(order.value.order_id, order.value.quantity + 1)
+    await routeWizardStore.updateCurrentRoute()
   }
 }
 
-function onWarning() {
-  emit('warning')
+async function onIssue() {
+  if (action.value !== ActionTypes.Issue) {
+    await routeWizardStore.issueOrder(order.value.order_id)
+    await routeWizardStore.updateCurrentRoute()
+    action.value = ActionTypes.Issue
+  }
 }
 
-function onDone() {
-  emit('done')
+async function onComplete() {
+  if (action.value !== ActionTypes.Completed) {
+    await routeWizardStore.completeOrder(order.value.order_id)
+    await routeWizardStore.updateCurrentRoute()
+    action.value = ActionTypes.Completed
+  }
 }
 </script>
 
@@ -167,6 +211,32 @@ function onDone() {
     width: 50px;
     height: 50px;
     color: #ffffff;
+
+    &:hover {
+      color: #ffffff !important;
+    }
+
+    &.--issue {
+      &.is-plain {
+        color: #ffc057;
+      }
+
+      &.is-disabled {
+        background-color: #ffc057;
+        cursor: default;
+      }
+    }
+
+    &.--completed {
+      &.is-plain {
+        color: #34cdbf;
+      }
+
+      &.is-disabled {
+        background-color: #34cdbf;
+        cursor: default;
+      }
+    }
   }
 }
 </style>

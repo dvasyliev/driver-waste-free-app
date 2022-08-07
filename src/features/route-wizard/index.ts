@@ -1,3 +1,3 @@
-export { default as RouteWizard } from './components/RouteWizard.vue'
-export { default as RouteWizardProgressBar } from './components/RouteWizardProgressBar.vue'
-export * from './routeWizardStore'
+export { default as RouteWizardModule } from './RouteWizardModule.vue'
+export * from './types'
+export * from './enums'

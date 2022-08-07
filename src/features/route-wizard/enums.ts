@@ -4,6 +4,7 @@ export enum Status {
   Scheduled = 2,
   InProgress = 3,
   Completed = 4,
+  Issue = 5,
 }
 
 export enum OrderType {
