@@ -84,15 +84,18 @@ const isAllOrdersReviewed = computed(
   () => numberOfReviewedOrders.value === currentStopOrders.value.length,
 )
 
-function onClose() {
+function close() {
   emit('update:isActive', !isActive.value)
-  // close()
+}
+
+function onClose() {
+  close()
 }
 
 async function onComplete() {
   if (isAllOrdersReviewed.value) {
     await routeWizardStore.completeCurrentStop()
-    emit('update:isActive', !isActive.value)
+    close()
     await routeWizardStore.updateCurrentRoute()
   }
 }
@@ -126,7 +129,11 @@ async function onComplete() {
     box-shadow: none;
     font-weight: bold;
     text-transform: uppercase;
-    color: #ffffff;
+
+    &,
+    &:hover {
+      color: #ffffff;
+    }
   }
 
   .el-dialog {

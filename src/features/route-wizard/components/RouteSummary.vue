@@ -12,9 +12,13 @@
 
     <template v-if="nextStop">
       <div class="RouteSummary-nextStop">
-        {{ nextStop.address.street }} {{ nextStop.address.house_number }}<br />
-        {{ nextStop.address.postal_code }} {{ nextStop.address.country }}
-        {{ nextStop.address.town }}
+        <span class="material-icons">location_on</span>
+
+        <span>
+          {{ nextStop.address.street }} {{ nextStop.address.house_number }}<br />
+          {{ nextStop.address.postal_code }} {{ nextStop.address.country }}
+          {{ nextStop.address.town }}
+        </span>
       </div>
     </template>
   </div>
@@ -32,3 +36,28 @@ const isLastButNotOneStop = computed(() => currentStopNumber.value === numberOfS
 const isLastStop = computed(() => currentStopNumber.value === numberOfStops.value)
 const numberOfLeftStops = computed(() => numberOfStops.value - currentStopNumber.value)
 </script>
+
+<style lang="scss" scoped>
+.RouteSummary {
+  &-info {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 500;
+    color: #46607f;
+  }
+
+  &-nextStop {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+    padding: 24px;
+    background-color: #f4f4f4;
+    color: #46607f;
+
+    span:first-of-type {
+      font-size: 30px;
+      padding-right: 8px;
+    }
+  }
+}
+</style>

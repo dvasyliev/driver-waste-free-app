@@ -7,10 +7,15 @@
     </div>
 
     <div class="RouteWizard-main">
-      <template v-if="isRouteCompleted">Route completed!</template>
+      <template v-if="isRouteCompleted">
+        <div class="RouteWizard-routeCompleted">
+          <span class="material-icons">check_circle</span>
+          <h3>Route completed!</h3>
+        </div>
+      </template>
       <template v-else-if="currentStop">
         <StopCard :stop="currentStop" @proceed="onProceed" />
-        <RouteSummary />
+        <RouteSummary class="RouteWizard-summary" />
         <OrdersModal v-model:is-active="isModalActive" />
       </template>
     </div>
@@ -68,6 +73,20 @@ async function onProceed() {
 
   &-main {
     padding: 18px 36px;
+  }
+
+  &-routeCompleted {
+    margin-top: 64px;
+    text-align: center;
+    color: #37ccbe;
+
+    span {
+      font-size: 80px;
+    }
+  }
+
+  &-summary {
+    margin-top: 48px;
   }
 }
 </style>
