@@ -40,6 +40,7 @@ export type Order = {
   stream_product_id: number
   stream_product_name: string
   stream_type: string
+  stream_product_background_color: string
   type: OrderType
 }
 

@@ -1,6 +1,9 @@
 <template>
   <div class="OrderCard">
-    <div class="OrderCard-left"></div>
+    <div
+      class="OrderCard-left"
+      :style="{ backgroundColor: order.stream_product_background_color || '#446080' }"
+    ></div>
 
     <div class="OrderCard-center">
       <div class="OrderCard-title">
@@ -13,10 +16,10 @@
         <div class="OrderCard-quantityControls">
           <ElButton
             class="OrderCard-quantityControl"
-            :disabled="order.quantity === MIN_ORDER_QUANTITY"
+            :disabled="!canDecrease"
             color="#34cdbf"
             circle
-            @click="onDecrease"
+            @click="decrease"
           >
             <span class="material-icons">remove</span>
           </ElButton>
@@ -27,10 +30,10 @@
 
           <ElButton
             class="OrderCard-quantityControl"
-            :disabled="order.quantity === MAX_ORDER_QUANTITY"
+            :disabled="!canIncrease"
             color="#34cdbf"
             circle
-            @click="onIncrease"
+            @click="increase"
           >
             <span class="material-icons">add</span>
           </ElButton>
@@ -43,22 +46,22 @@
       <div class="OrderCard-actions">
         <ElButton
           class="OrderCard-action --issue"
-          :disabled="action === ActionTypes.Issue"
-          :plain="action !== ActionTypes.Issue"
+          :disabled="!canIssue"
+          :plain="canIssue"
           color="#ffc057"
           circle
-          @click="onIssue"
+          @click="issue"
         >
           <span class="material-icons">warning</span>
         </ElButton>
 
         <ElButton
           class="OrderCard-action --completed"
-          :disabled="action === ActionTypes.Completed"
-          :plain="action !== ActionTypes.Completed"
+          :disabled="!canComplete"
+          :plain="canComplete"
           color="#34cdbf"
           circle
-          @click="onComplete"
+          @click="complete"
         >
           <span class="material-icons">done</span>
         </ElButton>
@@ -68,13 +71,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue'
-import { Status } from '../enums'
-import { useRouteWizardStore } from '../routeWizardStore'
+import { toRefs } from 'vue'
 import { Order } from '../types'
-
-const MIN_ORDER_QUANTITY = 0
-const MAX_ORDER_QUANTITY = 100
+import { useOrder } from '../composables/useOrder'
 
 type Props = {
   order: Order
@@ -82,50 +81,8 @@ type Props = {
 const props = defineProps<Props>()
 const { order } = toRefs(props)
 
-const routeWizardStore = useRouteWizardStore()
-
-enum ActionTypes {
-  Issue = 'issue',
-  Completed = 'completed',
-}
-const action = computed({
-  get: () => {
-    if (order.value.status === Status.Issue) return ActionTypes.Issue
-    if (order.value.status === Status.Completed) return ActionTypes.Completed
-    return null
-  },
-  set: (value) => value,
-})
-
-async function onDecrease() {
-  if (order.value.quantity > MIN_ORDER_QUANTITY) {
-    await routeWizardStore.updateOrderQuantity(order.value.order_id, order.value.quantity - 1)
-    await routeWizardStore.updateCurrentRoute()
-  }
-}
-
-async function onIncrease() {
-  if (order.value.quantity < MAX_ORDER_QUANTITY) {
-    await routeWizardStore.updateOrderQuantity(order.value.order_id, order.value.quantity + 1)
-    await routeWizardStore.updateCurrentRoute()
-  }
-}
-
-async function onIssue() {
-  if (action.value !== ActionTypes.Issue) {
-    await routeWizardStore.issueOrder(order.value.order_id)
-    await routeWizardStore.updateCurrentRoute()
-    action.value = ActionTypes.Issue
-  }
-}
-
-async function onComplete() {
-  if (action.value !== ActionTypes.Completed) {
-    await routeWizardStore.completeOrder(order.value.order_id)
-    await routeWizardStore.updateCurrentRoute()
-    action.value = ActionTypes.Completed
-  }
-}
+const { canDecrease, canIncrease, canIssue, canComplete, decrease, increase, issue, complete } =
+  useOrder(order)
 </script>
 
 <style lang="scss" scoped>
@@ -139,8 +96,8 @@ async function onComplete() {
   }
 
   &-left {
+    position: relative;
     width: 8px;
-    background-color: #0ca600;
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
   }
