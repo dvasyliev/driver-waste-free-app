@@ -19,7 +19,7 @@ export const getRoute = (routeId: Route['route_id']): Promise<{ data: Route }> =
       }
 
       reject({ error: { message: `Route ${routeId} not found` } })
-    }, 200)
+    }, 1000)
   })
 }
 

@@ -5,7 +5,7 @@
         <KeepAlive>
           <Suspense>
             <component :is="Component" />
-            <template #fallback> Loading... </template>
+            <template #fallback><Loading /></template>
           </Suspense>
         </KeepAlive>
       </Transition>
@@ -15,4 +15,5 @@
 
 <script lang="ts" setup>
 import AppLayout from './shared/layouts/AppLayout.vue'
+import Loading from './shared/components/Loading.vue'
 </script>

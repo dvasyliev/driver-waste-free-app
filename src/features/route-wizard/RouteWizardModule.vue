@@ -40,7 +40,7 @@ const { routeId } = toRefs(props)
 const routeWizardStore = useRouteWizardStore()
 const { route, currentStop, isRouteCompleted, routeProgress } = storeToRefs(routeWizardStore)
 
-routeWizardStore.getRoute(routeId.value)
+await routeWizardStore.getRoute(routeId.value)
 
 const isModalActive = ref(false)
 
