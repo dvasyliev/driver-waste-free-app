@@ -1,6 +1,5 @@
 <template>
   <ElDialog
-    ref="dialog"
     :model-value="isActive"
     :show-close="false"
     :append-to-body="true"
@@ -74,7 +73,6 @@ const emit = defineEmits<Emit>()
 const routeWizardStore = useRouteWizardStore()
 const { currentStop, currentStopOrders, nextStop } = storeToRefs(routeWizardStore)
 
-const dialog = ref(null)
 const numberOfReviewedOrders = computed(() => {
   return currentStopOrders.value.filter(({ status }) =>
     [Status.Completed, Status.Issue].includes(status),
@@ -95,8 +93,8 @@ function onClose() {
 async function onComplete() {
   if (isAllOrdersReviewed.value) {
     await routeWizardStore.completeCurrentStop()
-    close()
     await routeWizardStore.updateCurrentRoute()
+    close()
   }
 }
 </script>
