@@ -14,5 +14,5 @@
 </template>
 
 <script lang="ts" setup>
-import AppLayout from '@/shared/layouts/AppLayout.vue'
+import AppLayout from './shared/layouts/AppLayout.vue'
 </script>

@@ -1,4 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
+import RouteWizard from '../pages/RouteWizardPage.vue'
+import NotFound from '../pages/404.vue'
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -10,11 +12,11 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/route-wizard/:routeId',
     name: 'route-wizard',
-    component: import(/* webpackChunkName: "route-wizard-page" */ '@/pages/RouteWizardPage.vue'),
+    component: RouteWizard,
   },
 
   {
     path: '/:pathMatch(.*)*',
-    component: import(/* webpackChunkName: "404-page" */ '@/pages/404.vue'),
+    component: NotFound,
   },
 ]

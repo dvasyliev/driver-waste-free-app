@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
-import { RouteWizardModule } from '@/features/route-wizard'
+import { RouteWizardModule } from '../features/route-wizard'
 
 const route = useRoute()
 const { routeId } = route.params
