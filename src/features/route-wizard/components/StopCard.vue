@@ -40,6 +40,16 @@
         </div>
       </div>
 
+      <template v-if="stop.comment">
+        <div class="StopCard-comment"><span>Comment:</span> {{ stop.comment }}</div>
+      </template>
+
+      <template v-if="stop.telephone">
+        <div class="StopCard-telephone">
+          <span>Telephone:</span> <a :href="`tel:${stop.telephone}`">{{ stop.telephone }}</a>
+        </div>
+      </template>
+
       <div class="StopCard-buttons">
         <ElButton class="StopCard-button" color="#37ccbe" @click="onItinerary">
           Itinerary
@@ -216,6 +226,17 @@ function onItinerary() {
           color: gray;
         }
       }
+    }
+  }
+
+  &-comment,
+  &-telephone {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #3c3b4a;
+
+    span {
+      font-weight: 500;
     }
   }
 
